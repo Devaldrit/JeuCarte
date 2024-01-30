@@ -48,9 +48,9 @@ box.classList.add("box")
 const board = document.querySelector("#board") //on cible et stocke la div principale board
 
 let nb = 1 //represente le numéro de la boîte attendue
-
+let valuePrompt = parseInt(prompt("Combien de boîte veut tu ?")) //prompt pour pouvoir demander combien de boîte on veut au départ
 //boucle pour afficher les boîtes 
-for(let i = 1; i <=10; i++) {
+for(let i = 1; i <=valuePrompt; i++) {
     let newbox = box.cloneNode() //clone de la boite <div class="box">
     newbox.innerText = i //la variable i d'incrémentation sera afficher dans chaque nouvelle boîte cloner
     board.appendChild(newbox) //on ajoute dans le dom tree chaque nouvelle boîte
