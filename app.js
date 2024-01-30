@@ -39,7 +39,20 @@ function showReaction(type, clickedBox) { //type est la reaction attendu (le nom
         }, 800)
     }
 }
+/*********************** Timer ***************************/
+let Timer = document.getElementById("timer-up")
 
+let heures = 0;
+let minutes = 0;
+let secondes = 0;
+
+let timeout;
+
+let estArrete = true;
+
+function demarrer
+
+/*********************** Timer ***************************/
 //creation de la box en div
 const box = document.createElement("div")
 //Ajout d'une classe pour la styliser
@@ -58,6 +71,7 @@ for(let i = 1; i <=valuePrompt; i++) {
     newbox.addEventListener("click", function(){
         if(i == nb) { //on vérifie que le tour d'incrémentation corrépond au numéro de la boîte
             newbox.classList.add("box-valid") //on ajoute a chaque nouvellle boîte cloner la class "box-valid" pour appliquer le style déjà mis en place
+            shuffleChildren(board)
             if(nb == board.children.length) { //si le numéro de la boite cliquer correspond au nombre de boite du parent board
                 board.querySelectorAll(".box").forEach(function(box){ // on fait un foreach sur le parent board pour selectionner tout les enfant
                     showReaction("success", box) //on applique le style déjà mis en place pour l'appliquer au boîte cliquer
