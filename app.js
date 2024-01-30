@@ -79,4 +79,4 @@ for(let i = 1; i <=10; i++) {
     })
 }
 
-shuffleChildren(board)
+shuffleChildren(board) //on mélange les enfants du parent board
