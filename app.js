@@ -71,6 +71,7 @@ for(let i = 1; i <=valuePrompt; i++) {
             nb = 1 //on remet le nombre de la boite a 1 
             board.querySelectorAll(".box-valid").forEach(function(validBox){ //on refait un foreach cette fois ci sur les boîtes cliquer valid
                 validBox.classList.remove("box-valid") //on supprime pour chacune la classe box valid
+                shuffleChildren(board) //On remélange a chaque fois que le joueur se trompe
             })
         }
         else {
