@@ -44,6 +44,7 @@ function showReaction(type, clickedBox) { //type est la reaction attendu (le nom
 }
 /*********************** Timer ***************************/
 let Timer = document.getElementById("timer-up")
+let meilleureScoreElement = document.getElementById("best-Score")
 
 let heures = 0;
 let minutes = 0;
@@ -102,6 +103,12 @@ const defilerTemps = () => {
     timeout = setTimeout(defilerTemps, 1000);
 };
 
+// 1 ere etape Quand jeu finis, je récupère le temps on vérifie avec console.log pour vérificer sa présence
+// 2 ème étape setItem dans le localstorage clé et valeur de la variable qu'on récupère le score 3 eme valeur le temps et nombre de case, si nombre de case = temps de local storage et que le temps est meilleure donc j'update
+
+
+//Quand je lance le jeu récuperer nombre de case
+
 const reset = () => {
     chrono.textContent = "00:00:00";
     estArrete = true;
@@ -139,6 +146,7 @@ for(let i = 1; i <=valuePrompt; i++) {
             shuffleChildren(board)
             if(nb == board.children.length) { //si le numéro de la boite cliquer correspond au nombre de boite du parent board
                 arreter(); //on arrête le chrono une toutes les boîtes cliquer
+                meilleureScore();
                 board.querySelectorAll(".box").forEach(function(box){ // on fait un foreach sur le parent board pour selectionner tout les enfant
                     showReaction("success", box) //on applique le style déjà mis en place pour l'appliquer au boîte cliquer
                 })
