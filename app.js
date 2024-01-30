@@ -97,7 +97,7 @@ const defilerTemps = () => {
         heures = "0" + heures;
     }
     
-    Timer.textContent(`${heures}:${minutes}:${secondes}`);
+    Timer.textContent = `${heures}:${minutes}:${secondes}`;
 
     timeout = setTimeout(defilerTemps, 1000);
 };
@@ -128,11 +128,17 @@ for(let i = 1; i <=valuePrompt; i++) {
     newbox.innerText = i //la variable i d'incrémentation sera afficher dans chaque nouvelle boîte cloner
     board.appendChild(newbox) //on ajoute dans le dom tree chaque nouvelle boîte
 
+    //on déclenche le chrono si le joueur entre un nombre de boîte dans le prompt
+    if(i == valuePrompt) {
+        demarrer();
+    }
+
     newbox.addEventListener("click", function(){
         if(i == nb) { //on vérifie que le tour d'incrémentation corrépond au numéro de la boîte
             newbox.classList.add("box-valid") //on ajoute a chaque nouvellle boîte cloner la class "box-valid" pour appliquer le style déjà mis en place
             shuffleChildren(board)
             if(nb == board.children.length) { //si le numéro de la boite cliquer correspond au nombre de boite du parent board
+                arreter(); //on arrête le chrono une toutes les boîtes cliquer
                 board.querySelectorAll(".box").forEach(function(box){ // on fait un foreach sur le parent board pour selectionner tout les enfant
                     showReaction("success", box) //on applique le style déjà mis en place pour l'appliquer au boîte cliquer
                 })
