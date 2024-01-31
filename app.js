@@ -45,13 +45,21 @@ function showReaction(type, clickedBox) { //type est la reaction attendu (le nom
 /*********************** Timer ***************************/
 let Timer = document.getElementById("timer-up")
 let meilleureScoreElement = document.getElementById("best-Score")
+const timerCurrentElt = document.getElementById("timer-current")
+const timerCurrentMsElt = document.getElementById("timer-current-ms")
 
+let highScoreNbCases = null;
+let highScoreTimer = null;
+
+let timerInitialT0 = null; // timer initial au moment où on lance le chrono
+let timerCurrent = 0; // le timer en cours
 
 let heures = 0;
 let minutes = 0;
 let secondes = 0;
 
 let timeout;
+let idSetInterval;
 
 let estArrete = true; //variable pour controler on/off du chronometre, par defaut temps arreter vrai 
 
@@ -60,6 +68,18 @@ const demarrer = () => {
     if(estArrete) { //prend en parametre l'etat de controle arreter du chronometre
         estArrete = false; // met l'etat de controle du temps arreter sur faux
         defilerTemps(); //appelle la fonction qui incremente les variables heures, minutes et secondes
+        
+        // si le timer initial n'a pas encore été initialisé, alors on le fait
+        if (timerInitialT0 == null) {
+            timerInitialT0 = new Date().getTime();
+        }
+
+        // setInterval ressemble à setTimeout, mais au lieu d'appeler la fonction passée en argument après n millisecondes, va l'appeler après n millis puis toutes les n millis, tant qu'elle n'est pas désactivée
+        // comme pour clearTimeout(idDuTimeout) -> clearInterval(idDuSetInterval);
+        idSetInterval = setInterval(() => {
+            timerCurrent++;
+            timerCurrentElt.textContent = timerCurrent + " sec";
+        }, 1000);
     }
 }
 
@@ -76,6 +96,8 @@ const defilerTemps = () => {
     heures = parseInt(heures);
 
     secondes++;
+    
+    timerCurrentMsElt.textContent = (new Date().getTime() - timerInitialT0) + " ms";
 
     if(secondes == 60) {
         minutes++;
@@ -102,10 +124,11 @@ const defilerTemps = () => {
     
     const temps = Timer.textContent = `${heures}:${minutes}:${secondes}`;
     
-    //sauvegarde dans le localStorage du denrier temps
-    localStorage.setItem("temps", temps)
-    //sauvegarde de la valeur dans la variable score
-    const highScore = localStorage.getItem("temps")
+    // ici le temps passe, chaque seconde, il n'y a rien à sauvegarder ni à récupérer
+    // //sauvegarde dans le localStorage du denrier temps
+    // localStorage.setItem("temps", temps)
+    // //sauvegarde de la valeur dans la variable score
+    // const highScore = localStorage.getItem("temps")
     
 
     timeout = setTimeout(defilerTemps, 1000);
@@ -138,6 +161,15 @@ const reset = () => {
     minutes = 0;
     secondes = 0;
     clearTimeout(timeout);
+    clearInterval(idSetInterval);
+
+    board.querySelectorAll(".box").forEach(function(box){ // on fait un foreach sur le parent board pour selectionner tout les enfant
+        showReaction("success", box) //on applique le style déjà mis en place pour l'appliquer au boîte cliquer
+    })
+
+    // récupération du meilleur score dans le localStorage
+    highScoreNbCases = localStorage.getItem("highScoreNbCases") //nbCase cliquer LocalStorage
+    highScoreTimer = localStorage.getItem("highScoreTimer") // le temps qui fait office de score LocalStorage
 }
 
 
@@ -169,15 +201,14 @@ for(let i = 1; i <=valuePrompt; i++) {
             if(nb == board.children.length) { //si le numéro de la boite cliquer correspond au nombre de boite du parent board
                 
                 arreter(); //on arrête le chrono une fois toutes les boîtes cliquer
-                
-                //
-                localStorage.setItem("nbCase", valuePrompt) //nbCase cliquer LocalStorage
-                
-                const nbCase = localStorage.getItem("nbCase")
 
-                board.querySelectorAll(".box").forEach(function(box){ // on fait un foreach sur le parent board pour selectionner tout les enfant
-                    showReaction("success", box) //on applique le style déjà mis en place pour l'appliquer au boîte cliquer
-                })
+                // s'il n'y a pas encore de donnée stockée OU si le joueur a battu le meilleur score
+                    
+                    // mise à jour des variables de ce nouveau meilleur score dans le localStorage
+                    localStorage.setItem("highScoreNbCases", valuePrompt) //nbCase cliquer LocalStorage
+                    localStorage.setItem("highScoreTimer", temps) // le temps qui fait office de score LocalStorage
+                    
+                    // const nbCase = localStorage.getItem("nbCase")
             }
             nb++ //on incrèmente le numéro de la boîte si le click est bon
         }
