@@ -46,22 +46,24 @@ function showReaction(type, clickedBox) { //type est la reaction attendu (le nom
 let Timer = document.getElementById("timer-up")
 let meilleureScoreElement = document.getElementById("best-Score")
 
+
 let heures = 0;
 let minutes = 0;
 let secondes = 0;
 
 let timeout;
 
-let estArrete = true;
+let estArrete = true; //variable pour controler on/off du chronometre, par defaut temps arreter vrai 
 
+//fonction demarre qui comporte une autre fonction qui gere l'incrementation des secondes, minutes et heures
 const demarrer = () => {
-    if(estArrete) {
-        estArrete = false;
-        defilerTemps();
+    if(estArrete) { //prend en parametre l'etat de controle arreter du chronometre
+        estArrete = false; // met l'etat de controle du temps arreter sur faux
+        defilerTemps(); //appelle la fonction qui incremente les variables heures, minutes et secondes
     }
 }
 
-const arreter =  () => {
+const arreter =  () => { 
     if(estArrete = true);
     clearTimeout(timeout);
 }
@@ -98,13 +100,33 @@ const defilerTemps = () => {
         heures = "0" + heures;
     }
     
-    Timer.textContent = `${heures}:${minutes}:${secondes}`;
+    const temps = Timer.textContent = `${heures}:${minutes}:${secondes}`;
+    
+    //sauvegarde dans le localStorage du denrier temps
+    localStorage.setItem("temps", temps)
+    //sauvegarde de la valeur dans la variable score
+    const highScore = localStorage.getItem("temps")
+    
 
     timeout = setTimeout(defilerTemps, 1000);
 };
 
+
+//Function Meilleure score
 // 1 ere etape Quand jeu finis, je récupère le temps on vérifie avec console.log pour vérificer sa présence
 // 2 ème étape setItem dans le localstorage clé et valeur de la variable qu'on récupère le score 3 eme valeur le temps et nombre de case, si nombre de case = temps de local storage et que le temps est meilleure donc j'update
+
+const scoreTime = ()  => {
+    
+    // if (temps < highScore) {
+    
+    // }
+    //nb case 
+    //Nouveau Meilleure temps
+    
+    //nouveau nb case 
+}
+
 
 
 //Quand je lance le jeu récuperer nombre de case
@@ -134,19 +156,25 @@ for(let i = 1; i <=valuePrompt; i++) {
     let newbox = box.cloneNode() //clone de la boite <div class="box">
     newbox.innerText = i //la variable i d'incrémentation sera afficher dans chaque nouvelle boîte cloner
     board.appendChild(newbox) //on ajoute dans le dom tree chaque nouvelle boîte
-
+    
     //on déclenche le chrono si le joueur entre un nombre de boîte dans le prompt
     if(i == valuePrompt) {
         demarrer();
     }
-
+    
     newbox.addEventListener("click", function(){
         if(i == nb) { //on vérifie que le tour d'incrémentation corrépond au numéro de la boîte
             newbox.classList.add("box-valid") //on ajoute a chaque nouvellle boîte cloner la class "box-valid" pour appliquer le style déjà mis en place
             shuffleChildren(board)
             if(nb == board.children.length) { //si le numéro de la boite cliquer correspond au nombre de boite du parent board
-                arreter(); //on arrête le chrono une toutes les boîtes cliquer
-                meilleureScore();
+                
+                arreter(); //on arrête le chrono une fois toutes les boîtes cliquer
+                
+                //
+                localStorage.setItem("nbCase", valuePrompt) //nbCase cliquer LocalStorage
+                
+                const nbCase = localStorage.getItem("nbCase")
+
                 board.querySelectorAll(".box").forEach(function(box){ // on fait un foreach sur le parent board pour selectionner tout les enfant
                     showReaction("success", box) //on applique le style déjà mis en place pour l'appliquer au boîte cliquer
                 })
@@ -169,9 +197,4 @@ for(let i = 1; i <=valuePrompt; i++) {
 }
 
 shuffleChildren(board) //on mélange les enfants du parent board
-
-
-
-
-
 });
