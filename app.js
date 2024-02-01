@@ -43,10 +43,10 @@ function showReaction(type, clickedBox) { //type est la reaction attendu (le nom
     }
 }
 /*********************** Timer ***************************/
-let Timer = document.getElementById("timer-up")
-let meilleureScoreElement = document.getElementById("best-Score")
-const timerCurrentElt = document.getElementById("timer-current")
-const timerCurrentMsElt = document.getElementById("timer-current-ms")
+let Timer = document.getElementById("timer-up") //mauvais timer avec du décalage
+let meilleureScoreElement = document.getElementById("best-Score") //Timer pour afficher le meilleure temps
+const timerCurrentElt = document.getElementById("timer-current") //Timer avec le bon temps horaire
+const timerCurrentMsElt = document.getElementById("timer-current-ms") //Chrono pour voir le temps en ms
 
 let highScoreNbCases = null;
 let highScoreTimer = null;
@@ -58,8 +58,8 @@ let heures = 0;
 let minutes = 0;
 let secondes = 0;
 
-let timeout;
-let idSetInterval;
+let timeout; //Ancien TimmOut en avance 
+let idSetInterval; //Bon timeOut a utiliser qui est dans le bonne horaire
 
 let estArrete = true; //variable pour controler on/off du chronometre, par defaut temps arreter vrai 
 
@@ -69,11 +69,12 @@ const demarrer = () => {
         estArrete = false; // met l'etat de controle du temps arreter sur faux
         defilerTemps(); //appelle la fonction qui incremente les variables heures, minutes et secondes
         
-        // si le timer initial n'a pas encore été initialisé, alors on le fait
+        // si le timer initial n'a pas encore été initialisé, alors on le fait (Bon timer)
         if (timerInitialT0 == null) {
             timerInitialT0 = new Date().getTime();
         }
 
+        //MAUVAIS TIMER
         // setInterval ressemble à setTimeout, mais au lieu d'appeler la fonction passée en argument après n millisecondes, va l'appeler après n millis puis toutes les n millis, tant qu'elle n'est pas désactivée
         // comme pour clearTimeout(idDuTimeout) -> clearInterval(idDuSetInterval);
         idSetInterval = setInterval(() => {
@@ -85,7 +86,7 @@ const demarrer = () => {
 
 const arreter =  () => { 
     if(estArrete = true);
-    clearTimeout(timeout);
+    clearTimeout(timeout); //Remplacer par le nouveau bon Timeout
 }
 
 const defilerTemps = () => {
@@ -154,6 +155,7 @@ const scoreTime = ()  => {
 
 //Quand je lance le jeu récuperer nombre de case
 
+//(Endroit ou reinitialiser le tout chrono en cours a l'aide d'un boutton reinitialiser et garder le nouveau chrono afficher dans meilleure score)
 const reset = () => {
     chrono.textContent = "00:00:00";
     estArrete = true;
