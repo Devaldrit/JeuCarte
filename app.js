@@ -43,11 +43,11 @@ function showReaction(type, clickedBox) { //type est la reaction attendu (le nom
     }
 }
 /*********************** Timer ***************************/
-let Timer = document.getElementById("timer-up") //mauvais timer avec du décalage
+let timer = document.getElementById("timer-up") //mauvais timer avec du décalage
 let meilleureScoreElement = document.getElementById("best-Score") //Timer pour afficher le meilleure temps
 const timerCurrentElt = document.getElementById("timer-current") //Timer avec le bon temps horaire
 const timerCurrentMsElt = document.getElementById("timer-current-ms") //Chrono pour voir le temps en ms
-
+const buttonReset = document.getElementById("buttonReset") //Boutton pour reset le chrono et le jeu et sauvegarder le meilleure temps 
 let highScoreNbCases = null;
 let highScoreTimer = null;
 
@@ -69,24 +69,23 @@ const demarrer = () => {
         estArrete = false; // met l'etat de controle du temps arreter sur faux
         defilerTemps(); //appelle la fonction qui incremente les variables heures, minutes et secondes
         
-        // si le timer initial n'a pas encore été initialisé, alors on le fait (Bon timer)
+        // si le timer initial n'a pas encore été initialisé, alors on le fait
         if (timerInitialT0 == null) {
             timerInitialT0 = new Date().getTime();
         }
 
-        //MAUVAIS TIMER
         // setInterval ressemble à setTimeout, mais au lieu d'appeler la fonction passée en argument après n millisecondes, va l'appeler après n millis puis toutes les n millis, tant qu'elle n'est pas désactivée
         // comme pour clearTimeout(idDuTimeout) -> clearInterval(idDuSetInterval);
         idSetInterval = setInterval(() => {
             timerCurrent++;
-            timerCurrentElt.textContent = timerCurrent + " sec";
+            timerCurrentElt.textContent = timerCurrent;
         }, 1000);
     }
 }
 
 const arreter =  () => { 
     if(estArrete = true);
-    clearTimeout(timeout); //Remplacer par le nouveau bon Timeout
+    clearTimeout(idSetInterval);
 }
 
 const defilerTemps = () => {
@@ -124,6 +123,7 @@ const defilerTemps = () => {
     }
     
     const temps = Timer.textContent = `${heures}:${minutes}:${secondes}`;
+    console.log(temps)
     
     // ici le temps passe, chaque seconde, il n'y a rien à sauvegarder ni à récupérer
     // //sauvegarde dans le localStorage du denrier temps
@@ -153,11 +153,10 @@ const scoreTime = ()  => {
 
 
 
-//Quand je lance le jeu récuperer nombre de case
+//function button reset
 
-//(Endroit ou reinitialiser le tout chrono en cours a l'aide d'un boutton reinitialiser et garder le nouveau chrono afficher dans meilleure score)
 const reset = () => {
-    chrono.textContent = "00:00:00";
+    timer.textContent = "00:00:00";
     estArrete = true;
     heures = 0;
     minutes = 0;
@@ -171,9 +170,15 @@ const reset = () => {
 
     // récupération du meilleur score dans le localStorage
     highScoreNbCases = localStorage.getItem("highScoreNbCases") //nbCase cliquer LocalStorage
-    highScoreTimer = localStorage.getItem("highScoreTimer") // le temps qui fait office de score LocalStorage
+    
 }
 
+buttonReset.addEventListener("click", function (){
+    console.log(reset);
+    reset();
+})
+
+// console.log(timerCurrentElt.innerHTML);
 
 /*********************** Timer ***************************/
 //creation de la box en div
@@ -201,16 +206,20 @@ for(let i = 1; i <=valuePrompt; i++) {
             newbox.classList.add("box-valid") //on ajoute a chaque nouvellle boîte cloner la class "box-valid" pour appliquer le style déjà mis en place
             shuffleChildren(board)
             if(nb == board.children.length) { //si le numéro de la boite cliquer correspond au nombre de boite du parent board
-                
+                //  tempsTotal = getElementById('timer-current');
                 arreter(); //on arrête le chrono une fois toutes les boîtes cliquer
+                const totalTemp = timerCurrentElt.innerHTML;
+                localStorage.setItem("temps", totalTemp);
 
-                // s'il n'y a pas encore de donnée stockée OU si le joueur a battu le meilleur score
-                    
-                    // mise à jour des variables de ce nouveau meilleur score dans le localStorage
-                    localStorage.setItem("highScoreNbCases", valuePrompt) //nbCase cliquer LocalStorage
-                    localStorage.setItem("highScoreTimer", temps) // le temps qui fait office de score LocalStorage
-                    
-                    // const nbCase = localStorage.getItem("nbCase")
+                console.log(totalTemp)
+
+                localStorage.setItem("highScoreNbCases", valuePrompt) //nbCase cliquer LocalStorage
+                // // s'il n'y a pas encore de donnée stockée OU si le joueur a battu le meilleur score (mettre en place quand le button reset fonctionne)
+                // if (localStorage !== null || highScoreTimer > timerInitialT0) {
+                //     // mise à jour des variables de ce nouveau meilleur score dans le localStorage
+                //     localStorage.setItem("highScoreNbCases", valuePrompt) //nbCase cliquer LocalStorage
+                //     localStorage.setItem("temps", totalTemp); // le temps qui fait office de score LocalStorage
+                // }
             }
             nb++ //on incrèmente le numéro de la boîte si le click est bon
         }
